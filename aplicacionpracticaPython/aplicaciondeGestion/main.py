@@ -30,7 +30,8 @@ def registrar_juego():
     #checkbox
     if ui_registrar_juego.checkbox_digital.isChecked():
         juego.digital = True
-    
+    else:   
+        juego.digital = False
     #combo
     indice_seleccionado = ui_registrar_juego.combo_edicion.currentIndex()
     juego.edicion = ui_registrar_juego.combo_edicion.itemText(indice_seleccionado)
@@ -122,6 +123,12 @@ def editar_juego(id,juego):
         
     ui_ventana_editar_juegos.combo_edicion.setCurrentText(juego_a_editar.edicion)
     
+    if juego_a_editar.pago == "Tarjeta Credito":
+        ui_ventana_editar_juegos.radio_tarjeta_credito.setChecked(True)
+    
+    if juego_a_editar.pago == "Paypal":
+        ui_ventana_editar_juegos.radio_paypal.setChecked(True)
+    
     
     
     ui_ventana_editar_juegos.boton_guardar_cambios_juego.clicked.connect(partial(guardar_cambios_juego,juego_a_editar.id))
@@ -138,6 +145,8 @@ def guardar_cambios_juego(id):
     
     if ui_ventana_editar_juegos.checkbox_digital.isChecked():
         juego_guardar_cambios.digital = True
+        
+    juego_guardar_cambios.edicion = ui_ventana_editar_juegos.combo_edicion.currentText()
     
     #combo
     indice_seleccionado = ui_ventana_editar_juegos.combo_edicion.currentIndex()
