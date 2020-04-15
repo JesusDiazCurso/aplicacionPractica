@@ -91,6 +91,12 @@ def mostrar_table_widget():
         #para añadir las celdas correspondientes
         columna_indice = 0
         for valor in l:
+            
+            if columna_indice == 6:
+                if valor == 0:
+                    valor = "NO"
+                else: valor = "SI"
+                
             celda = QTableWidgetItem(str(valor))
             ui_ventana_table_widget.tabla_juegos.setItem(fila,columna_indice,celda)
             columna_indice += 1
