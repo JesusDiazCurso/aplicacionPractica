@@ -106,7 +106,7 @@ class Ui_MainWindow(object):
         item = self.tabla_juegos.horizontalHeaderItem(2)
         item.setText(_translate("MainWindow", " NOMBRE JUEGO      "))
         item = self.tabla_juegos.horizontalHeaderItem(3)
-        item.setText(_translate("MainWindow", "EDITAR"))
+        item.setText(_translate("MainWindow", "EDICION"))
         item = self.tabla_juegos.horizontalHeaderItem(4)
         item.setText(_translate("MainWindow", "AÑO"))
         item = self.tabla_juegos.horizontalHeaderItem(5)

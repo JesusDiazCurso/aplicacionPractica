@@ -80,7 +80,7 @@
     </column>
     <column>
      <property name="text">
-      <string>EDITAR</string>
+      <string>EDICION</string>
      </property>
      <property name="font">
       <font>

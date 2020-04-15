@@ -145,7 +145,7 @@ class Ui_MainWindow(object):
         self.checkbox_digital = QtWidgets.QCheckBox(self.centralwidget)
         self.checkbox_digital.setGeometry(QtCore.QRect(290, 250, 21, 17))
         self.checkbox_digital.setText("")
-        self.checkbox_digital.setChecked(True)
+        self.checkbox_digital.setChecked(False)
         self.checkbox_digital.setObjectName("checkbox_digital")
         self.radio_paypal = QtWidgets.QRadioButton(self.centralwidget)
         self.radio_paypal.setGeometry(QtCore.QRect(350, 360, 82, 17))
