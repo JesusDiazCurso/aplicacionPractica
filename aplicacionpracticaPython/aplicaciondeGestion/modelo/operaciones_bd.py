@@ -18,7 +18,9 @@ def registro_juego(juego):
     valores_a_insertar = (juego.tipodejuego , juego.nombrejuego , juego.plataforma , juego.añosalida , juego.precio, juego.digital, juego.edicion, juego.pago)
     cursor.execute(sql , valores_a_insertar)
     conexion.commit()
+    id_imagen = cursor.lastrowid
     conexion.disconnect()
+    return id_imagen
     
 def obtener_juegos():
     sql = constantes_sql.SQL_SELECT_JUEGOS
