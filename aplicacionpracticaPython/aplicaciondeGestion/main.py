@@ -11,6 +11,7 @@ from modelo.clases import Juego
 from modelo import operaciones_bd
 from PyQt5.Qt import QMessageBox, QTableWidgetItem, QPushButton
 from _functools import partial
+from validadores import validadores_juego
 
 
 
@@ -19,12 +20,57 @@ lista_resultado = None
 #inicio definicion funciones
 
 def registrar_juego():
-    juego = Juego
+    juego = Juego()
+    
     juego.tipodejuego = ui_registrar_juego.entrada_tipo_juego.text()
+    juego.tipodejuego = juego.tipodejuego.strip()
+    #validador tipo
+    resultado_validar_tipo = validadores_juego.validar_tipo(juego.tipodejuego)
+    if resultado_validar_tipo == None :
+        ui_registrar_juego.label_error_tipo.setText("Tipo Incorrecto")
+        return
+    else:
+        ui_registrar_juego.label_error_tipo.clear()
+    
     juego.nombrejuego = ui_registrar_juego.entrada_nombre_juego.text()
+    juego.nombrejuego = juego.nombrejuego.strip()#eliminar espacios en blanco al principio
+    #validador nombre
+    resultado_validar_nombre = validadores_juego.validar_nombre(juego.nombrejuego)
+    if resultado_validar_nombre == None :
+        ui_registrar_juego.label_error_nombre.setText("Nombre Incorrecto")
+        return
+    else:
+        ui_registrar_juego.label_error_nombre.clear()
+        
     juego.plataforma = ui_registrar_juego.entrada_tipo_plataforma.text()
+    juego.plataforma = juego.plataforma.strip()
+    #validador plataforma
+    resultado_validar_plataforma = validadores_juego.validar_plataforma(juego.plataforma)
+    if resultado_validar_plataforma == None :
+        ui_registrar_juego.label_error_plataforma.setText("Plataforma Incorrecta")
+        return
+    else:
+        ui_registrar_juego.label_error_plataforma.clear()
+    
     juego.añosalida = ui_registrar_juego.entrada_anio_juego.text()
+    juego.añosalida = juego.añosalida.strip()
+    #validador año
+    resultado_validar_anio = validadores_juego.validar_anio(juego.añosalida)
+    if resultado_validar_anio == None :
+        ui_registrar_juego.label_error_anio.setText("Año Incorrecto")
+        return
+    else:
+        ui_registrar_juego.label_error_anio.clear()
+    
     juego.precio = ui_registrar_juego.entrada_precio_juego.text()
+    juego.precio = juego.precio.strip()
+    #validador precio
+    resultado_validar_precio = validadores_juego.validar_precio(juego.precio)
+    if resultado_validar_precio == None :
+        ui_registrar_juego.label_error_precio.setText("Precio Incorrecto")
+        return
+    else:
+        ui_registrar_juego.label_error_precio.clear()
 
     
     #checkbox
@@ -52,6 +98,11 @@ def registrar_juego():
 def mostrar_registro_juegos():
     ui_registrar_juego.setupUi(MainWindow)
     ui_registrar_juego.boton_resgistrar_juego.clicked.connect(registrar_juego)
+    ui_registrar_juego.label_error_tipo.clear()
+    ui_registrar_juego.label_error_nombre.clear()
+    ui_registrar_juego.label_error_plataforma.clear()
+    ui_registrar_juego.label_error_anio.clear()
+    ui_registrar_juego.label_error_precio.clear()
     
 def mostrar_listado_juegos():
     ui_listar_juego.setupUi(MainWindow)
@@ -112,6 +163,7 @@ def mostrar_table_widget():
         fila += 1
         
 def editar_juego(id,juego):
+    juegos = Juego()
     QMessageBox.about(MainWindow,"Info","Vas a editar un registro de ID: " + str(id) + " Juego: " + juego)
     ui_ventana_editar_juegos.setupUi(MainWindow)
     #sacar de base de datos toda la informacion a editar
@@ -121,6 +173,7 @@ def editar_juego(id,juego):
     ui_ventana_editar_juegos.entrada_tipo_plataforma.setText(juego_a_editar.plataforma)
     ui_ventana_editar_juegos.entrada_anio_juego.setText(str(juego_a_editar.añosalida))
     ui_ventana_editar_juegos.entrada_precio_juego.setText(str(juego_a_editar.precio))
+    juegos.precio = ui_ventana_editar_juegos.entrada_precio_juego.text()
     ui_ventana_editar_juegos.checkbox_digital.setChecked(juego_a_editar.digital)
     ui_ventana_editar_juegos.combo_edicion.setCurrentText(juego_a_editar.edicion)
     
