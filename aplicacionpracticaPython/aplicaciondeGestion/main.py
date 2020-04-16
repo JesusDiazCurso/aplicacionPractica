@@ -9,9 +9,13 @@ from ventanas01 import ventana_principal, ventana_listado_juegos, ventana_regist
 import sys
 from modelo.clases import Juego
 from modelo import operaciones_bd
-from PyQt5.Qt import QMessageBox, QTableWidgetItem, QPushButton
+from PyQt5.Qt import QMessageBox, QTableWidgetItem, QPushButton, QFileDialog,\
+    QPixmap, QLabel
 from _functools import partial
+import shutil #facilidad para copiar archivos digitales
+from pathlib import Path
 from validadores import validadores_juego
+from cProfile import label
 
 
 
@@ -89,15 +93,36 @@ def registrar_juego():
     if ui_registrar_juego.radio_paypal.isChecked():
         juego.pago = "Paypal"
     
+    id_imagen = operaciones_bd.registro_juego(juego)
+    #guardar imagen temporal renombrandola al id del registro, para saber
+    #que dicha imagen es la asociada al registro
+    ruta_imagen_destino = "imagenes/"+  str(id_imagen) + ".jpg"
+    shutil.move("temporal/imagen.jpg",ruta_imagen_destino)
     
-    operaciones_bd.registro_juego(juego)
     QMessageBox.about(MainWindow,"Info","Registro juego OK")
     
-    
+def seleccionar_caratula():
+    archivo = QFileDialog.getOpenFileName(MainWindow)  
+    print(archivo)
+    ruta_archivo = archivo[0]
+    shutil.copy(ruta_archivo,"temporal/imagen.jpg")
+    pixmap = QPixmap("temporal/imagen.jpg")
+    ancho_label_imagen = ui_registrar_juego.label_imagen.width()
+    alto_label_imagen = ui_registrar_juego.label_imagen.height()
+    #redimensionar a ancho
+    #pixmap_redim = pixmap.scaledToWidth(ancho_label_imagen)
+    #ui_registrar_juego.label_imagen.setPixmap(pixmap_redim)
+    #redimensionar por alto     
+    pixmap_redim = pixmap.scaledToHeight(alto_label_imagen)
+    ui_registrar_juego.label_imagen.setPixmap(pixmap_redim)
+    #redimensionar por alto y ancho
+    #pixmap_redim = pixmap.scaled(ancho_label_imagen,alto_label_imagen)
+    #ui_registrar_juego.label_imagen.setPixmap(pixmap_redim)
     
 def mostrar_registro_juegos():
     ui_registrar_juego.setupUi(MainWindow)
     ui_registrar_juego.boton_resgistrar_juego.clicked.connect(registrar_juego)
+    ui_registrar_juego.boton_seleccionar_archivo.clicked.connect(seleccionar_caratula)
     ui_registrar_juego.label_error_tipo.clear()
     ui_registrar_juego.label_error_nombre.clear()
     ui_registrar_juego.label_error_plataforma.clear()
@@ -154,14 +179,25 @@ def mostrar_table_widget():
         #para meter boton de borrar
         boton_borrar = QPushButton("Borrar")
         boton_borrar.clicked.connect(partial(borrar_juego,l[0]))
-        ui_ventana_table_widget.tabla_juegos.setCellWidget(fila,9,boton_borrar)
+        ui_ventana_table_widget.tabla_juegos.setCellWidget(fila,10,boton_borrar)
         
-        boton_editar = QPushButton("editar")
+        boton_editar = QPushButton("Editar")
         boton_editar.clicked.connect(partial(editar_juego,l[0],l[2]))
-        ui_ventana_table_widget.tabla_juegos.setCellWidget(fila,10,boton_editar)
+        ui_ventana_table_widget.tabla_juegos.setCellWidget(fila,11,boton_editar)
+        
+        #mostrar una miniatura
+        label_miniatura = QLabel()
+        ruta_imagen = "imagenes/" + str(l[0]) + ".jpg"
+        objeto_path = Path(ruta_imagen)
+        existe = objeto_path.is_file()
+        if existe == True:
+            pixmap = QPixmap(ruta_imagen)
+            pixmap_redim = pixmap.scaledToHeight(40)
+            label_miniatura.setPixmap(pixmap_redim)
+            ui_ventana_table_widget.tabla_juegos.setCellWidget(fila,9,label_miniatura)
         
         fila += 1
-        
+            
 def editar_juego(id,juego):
     juegos = Juego()
     QMessageBox.about(MainWindow,"Info","Vas a editar un registro de ID: " + str(id) + " Juego: " + juego)
@@ -246,6 +282,7 @@ MainWindow = QtWidgets.QMainWindow()
 ui = ventana_principal.Ui_MainWindow()
 
 ui_registrar_juego = ventana_registrar_juegos.Ui_MainWindow()
+ui_editar_juego = ventana_editar_juegos.Ui_MainWindow()
 ui_listar_juego = ventana_listado_juegos.Ui_MainWindow()
 ui_ventana_list_widget = ventana_list_widget.Ui_MainWindow()
 ui_ventana_table_widget = ventana_table_widget.Ui_MainWindow()
