@@ -1,0 +1,5 @@
+SQL_INSERCION_JUEGO = "INSERT INTO `tabla_juegos` (`id`, `Tipo de Juego`, `Nombre de juego`, `Plataforma`, `Año de Salida`, `Precio`, `Digital`, `Edicion`, `Opcion de Pago` ) VALUES (NULL, %s, %s, %s, %s, %s, %s, %s, %s);"
+SQL_SELECT_JUEGOS = "SELECT * FROM tabla_juegos" 
+SQL_BORRAR_JUEGO = "DELETE FROM tabla_juegos WHERE id = %s ;"
+SQL_OBTENER_JUEGOS_POR_ID = "SELECT * FROM tabla_juegos WHERE id = %s ;"
+SQL_GUARDAR_CAMBIOS_JUEGOS = "UPDATE tabla_juegos SET `Tipo de Juego` = %s, `Nombre de juego` = %s, `Plataforma` = %s, `Año de Salida` = %s, `Precio` = %s, `Digital` = %s, `Edicion` = %s, `Opcion de pago` = %s WHERE id = %s ;"
