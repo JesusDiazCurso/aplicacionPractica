@@ -96,8 +96,14 @@ def registrar_juego():
     id_imagen = operaciones_bd.registro_juego(juego)
     #guardar imagen temporal renombrandola al id del registro, para saber
     #que dicha imagen es la asociada al registro
-    ruta_imagen_destino = "imagenes/"+  str(id_imagen) + ".jpg"
-    shutil.move("temporal/imagen.jpg",ruta_imagen_destino)
+    
+    #solo se mueve la imagen si existe
+    ruta_imagen = "temporal/imagen.jpg"
+    objeto_path = Path(ruta_imagen)
+    existe = objeto_path.is_file()
+    if existe:
+        ruta_imagen_destino = "imagenes/"+  str(id_imagen) + ".jpg"
+        shutil.move("temporal/imagen.jpg",ruta_imagen_destino)
     
     QMessageBox.about(MainWindow,"Info","Registro juego OK")
     
@@ -223,11 +229,35 @@ def editar_juego(id,juego):
     
     if juego_a_editar.pago == "Paypal":
         ui_ventana_editar_juegos.radio_paypal.setChecked(True)
+        
+    #para editar juego y cargar imagen en label imagen
+    pixmap = QPixmap("imagenes/"+ str(juego_a_editar.id) +".jpg")
+    alto_label_imagen = ui_ventana_editar_juegos.label_imagen.height()
+    pixmap_redim = pixmap.scaledToHeight(alto_label_imagen)
+    ui_ventana_editar_juegos.label_imagen.setPixmap(pixmap_redim)
     
     
     
     ui_ventana_editar_juegos.boton_guardar_cambios_juego.clicked.connect(partial(guardar_cambios_juego,juego_a_editar.id))
-    
+    ui_ventana_editar_juegos.boton_seleccionar_archivo.clicked.connect(seleccionar_caratula_editar)
+
+def seleccionar_caratula_editar():
+    archivo = QFileDialog.getOpenFileName(MainWindow)  
+    print(archivo)
+    ruta_archivo = archivo[0]
+    shutil.copy(ruta_archivo,"temporal/imagen.jpg")
+    pixmap = QPixmap("temporal/imagen.jpg")
+    ancho_label_imagen = ui_ventana_editar_juegos.label_imagen.width()
+    alto_label_imagen = ui_ventana_editar_juegos.label_imagen.height()
+    #redimensionar a ancho
+    #pixmap_redim = pixmap.scaledToWidth(ancho_label_imagen)
+    #ui_registrar_juego.label_imagen.setPixmap(pixmap_redim)
+    #redimensionar por alto     
+    pixmap_redim = pixmap.scaledToHeight(alto_label_imagen)
+    ui_ventana_editar_juegos.label_imagen.setPixmap(pixmap_redim)
+    #redimensionar por alto y ancho
+    #pixmap_redim = pixmap.scaled(ancho_label_imagen,alto_label_imagen)
+    #ui_registrar_juego.label_imagen.setPixmap(pixmap_redim)
 
 def guardar_cambios_juego(id):
     QMessageBox.about(MainWindow,"Info","Guardar cambios sobre el registro de ID " + str(id))
@@ -257,6 +287,14 @@ def guardar_cambios_juego(id):
     juego_guardar_cambios.id = id
     
     operaciones_bd.guardar_cambios_juegos(juego_guardar_cambios)
+    
+    #solo se mueve la imagen si existe
+    ruta_imagen = "temporal/imagen.jpg"
+    objeto_path = Path(ruta_imagen)
+    existe = objeto_path.is_file()
+    if existe:
+        ruta_imagen_destino = "imagenes/"+  str(id) + ".jpg"
+        shutil.move("temporal/imagen.jpg",ruta_imagen_destino)
     
     mostrar_table_widget()#mostrar todos los juegos
     
