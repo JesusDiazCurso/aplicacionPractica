@@ -1,6 +1,5 @@
 '''
 Created on 31 mar. 2020
-
 @author:Jesus
 '''
 from PyQt5 import QtCore, QtGui, QtWidgets
@@ -31,7 +30,7 @@ def registrar_juego():
     #validador tipo
     resultado_validar_tipo = validadores_juego.validar_tipo(juego.tipodejuego)
     if resultado_validar_tipo == None :
-        ui_registrar_juego.label_error_tipo.setText("Tipo Incorrecto")
+        ui_registrar_juego.label_error_tipo.setText("<font color='red'>Tipo Incorrecto</font>")
         return
     else:
         ui_registrar_juego.label_error_tipo.clear()
@@ -41,7 +40,7 @@ def registrar_juego():
     #validador nombre
     resultado_validar_nombre = validadores_juego.validar_nombre(juego.nombrejuego)
     if resultado_validar_nombre == None :
-        ui_registrar_juego.label_error_nombre.setText("Nombre Incorrecto")
+        ui_registrar_juego.label_error_nombre.setText("<font color='red'>Nombre Incorrecto</font>")
         return
     else:
         ui_registrar_juego.label_error_nombre.clear()
@@ -51,7 +50,7 @@ def registrar_juego():
     #validador plataforma
     resultado_validar_plataforma = validadores_juego.validar_plataforma(juego.plataforma)
     if resultado_validar_plataforma == None :
-        ui_registrar_juego.label_error_plataforma.setText("Plataforma Incorrecta")
+        ui_registrar_juego.label_error_plataforma.setText("<font color='red'>Plataforma Incorrecta</font>")
         return
     else:
         ui_registrar_juego.label_error_plataforma.clear()
@@ -61,7 +60,7 @@ def registrar_juego():
     #validador año
     resultado_validar_anio = validadores_juego.validar_anio(juego.añosalida)
     if resultado_validar_anio == None :
-        ui_registrar_juego.label_error_anio.setText("Año Incorrecto")
+        ui_registrar_juego.label_error_anio.setText("<font color='red'>Año Incorrecto</font>")
         return
     else:
         ui_registrar_juego.label_error_anio.clear()
@@ -71,7 +70,7 @@ def registrar_juego():
     #validador precio
     resultado_validar_precio = validadores_juego.validar_precio(juego.precio)
     if resultado_validar_precio == None :
-        ui_registrar_juego.label_error_precio.setText("Precio Incorrecto")
+        ui_registrar_juego.label_error_precio.setText("<font color='red'>Precio Incorrecto</font>")
         return
     else:
         ui_registrar_juego.label_error_precio.clear()
@@ -211,10 +210,15 @@ def editar_juego(id,juego):
     #sacar de base de datos toda la informacion a editar
     juego_a_editar = operaciones_bd.obtener_juegos_por_id(id)
     ui_ventana_editar_juegos.entrada_tipo_juego.setText(juego_a_editar.tipodejuego)
+    ui_ventana_editar_juegos.label_error_tipo.clear()
     ui_ventana_editar_juegos.entrada_nombre_juego.setText(juego_a_editar.nombrejuego)
+    ui_ventana_editar_juegos.label_error_nombre.clear()
     ui_ventana_editar_juegos.entrada_tipo_plataforma.setText(juego_a_editar.plataforma)
+    ui_ventana_editar_juegos.label_error_plataforma.clear()
     ui_ventana_editar_juegos.entrada_anio_juego.setText(str(juego_a_editar.añosalida))
+    ui_ventana_editar_juegos.label_error_anio.clear()
     ui_ventana_editar_juegos.entrada_precio_juego.setText(str(juego_a_editar.precio))
+    ui_ventana_editar_juegos.label_error_precio.clear()
     juegos.precio = ui_ventana_editar_juegos.entrada_precio_juego.text()
     ui_ventana_editar_juegos.checkbox_digital.setChecked(juego_a_editar.digital)
     ui_ventana_editar_juegos.combo_edicion.setCurrentText(juego_a_editar.edicion)
@@ -260,13 +264,49 @@ def seleccionar_caratula_editar():
     #ui_registrar_juego.label_imagen.setPixmap(pixmap_redim)
 
 def guardar_cambios_juego(id):
-    QMessageBox.about(MainWindow,"Info","Guardar cambios sobre el registro de ID " + str(id))
+    
     juego_guardar_cambios = Juego()
     juego_guardar_cambios.tipodejuego = ui_ventana_editar_juegos.entrada_tipo_juego.text()
+    
+    resultado_validar_tipo = validadores_juego.validar_tipo(juego_guardar_cambios.tipodejuego)
+    if resultado_validar_tipo == None :
+        ui_ventana_editar_juegos.label_error_tipo.setText("<font color='red'>Tipo Incorrecto</font>")
+        return
+    else:
+        ui_ventana_editar_juegos.label_error_tipo.clear()
+    
     juego_guardar_cambios.nombrejuego = ui_ventana_editar_juegos.entrada_nombre_juego.text()
+    
+    resultado_validar_nombre = validadores_juego.validar_nombre(juego_guardar_cambios.nombrejuego)
+    if resultado_validar_nombre == None :
+        ui_ventana_editar_juegos.label_error_nombre.setText("<font color='red'>Nombre Incorrecto</font>")
+        return
+    else:
+        ui_ventana_editar_juegos.label_error_nombre.clear()
+    
     juego_guardar_cambios.plataforma = ui_ventana_editar_juegos.entrada_tipo_plataforma.text()
+    resultado_validar_plataforma = validadores_juego.validar_plataforma(juego_guardar_cambios.plataforma)
+    if resultado_validar_plataforma == None :
+        ui_ventana_editar_juegos.label_error_plataforma.setText("<font color='red'>Plataforma Incorrecta</font>")
+        return
+    else:
+        ui_ventana_editar_juegos.label_error_plataforma.clear()
+        
     juego_guardar_cambios.añosalida = ui_ventana_editar_juegos.entrada_anio_juego.text()
+    resultado_validar_anio = validadores_juego.validar_anio(juego_guardar_cambios.añosalida)
+    if resultado_validar_anio == None :
+        ui_ventana_editar_juegos.label_error_anio.setText("<font color='red'>Año Incorrecto</font>")
+        return
+    else:
+        ui_ventana_editar_juegos.label_error_anio.clear()
+    
     juego_guardar_cambios.precio = ui_ventana_editar_juegos.entrada_precio_juego.text()
+    resultado_validar_precio = validadores_juego.validar_precio(juego_guardar_cambios.precio)
+    if resultado_validar_precio == None :
+        ui_ventana_editar_juegos.label_error_precio.setText("<font color='red'>Precio Incorrecto</font>")
+        return
+    else:
+        ui_ventana_editar_juegos.label_error_precio.clear()
     
     if ui_ventana_editar_juegos.checkbox_digital.isChecked():
         juego_guardar_cambios.digital = True
@@ -286,6 +326,7 @@ def guardar_cambios_juego(id):
     
     juego_guardar_cambios.id = id
     
+    QMessageBox.about(MainWindow,"Info","Guardar cambios sobre el registro de ID " + str(id))
     operaciones_bd.guardar_cambios_juegos(juego_guardar_cambios)
     
     #solo se mueve la imagen si existe
